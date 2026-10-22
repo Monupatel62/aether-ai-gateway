@@ -49,6 +49,4 @@ When implementation begins, explain security invariants, state transitions, retr
 
 ## Gateway decision gate
 
-Do not hardwire the implementation to DIAL Core or the DevKit provider package before ADR-0005 is accepted. Compare the options in the [master DIAL adoption evaluation](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/DIAL_ADOPTION_EVALUATION.md). Keep a stable Aether-owned request/response/stream/error/usage/capability contract and place upstream-specific mapping behind adapters. Only maintain a hybrid route if a proof-of-concept demonstrates a real requirement.
-
-The current DevKit source review is recorded in [DevKit compatibility review](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/DEVKIT_COMPATIBILITY_REVIEW.md). It records the observed package versions, not registry integrity or a completed runtime test.
+Do not hardwire the implementation to AI DIAL Core or any optional external gateway package before ADR-0005 is accepted. Compare the options in the [master DIAL adoption evaluation](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/DIAL_ADOPTION_EVALUATION.md). Keep a stable Aether-owned request/response/stream/error/usage/capability contract and place upstream-specific mapping behind adapters. Only maintain a hybrid route if a proof-of-concept demonstrates a real requirement.
