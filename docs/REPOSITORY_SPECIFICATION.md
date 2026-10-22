@@ -1,6 +1,6 @@
 # Repository specification: aether-ai-gateway
 
-**Status:** Documentation baseline copied from the Aether AI master specification. Implementation status must be verified separately.
+**Status:** Repository exists; documentation-only on the inspected `main` branch. No application implementation is present in the audited tree.
 
 ## Mission
 
@@ -12,7 +12,7 @@ Owns model request lifecycle, not provider-specific wire details, UI, billing le
 
 ## Dependencies and connections
 
-aether-ai-providers, aether-ai-security, aether-ai-observability; optional AI DIAL Core adapter.
+aether-ai-providers for provider adapters, plus aether-ai-security and aether-ai-observability.
 
 ## Owned capabilities
 
