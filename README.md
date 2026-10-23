@@ -1,39 +1,26 @@
 # aether-ai-gateway
 
-> **Status: Documentation phase.** No application code or production deployment has been started in this repository.
+**Status:** Initial provider-neutral routing core implemented on a feature branch. No production deployment or provider selection is claimed.
 
-## Purpose
+## Implemented
 
-Provider-independent model access, routing, request normalization, streaming, timeouts, and provider policy enforcement.
+- [Gateway source](src/index.js): explicit model-to-provider routing, required authorization callback, fail-closed authorization behavior, bounded request timeout, abort-signal propagation, and safe error normalization.
+- [Unit tests](test/gateway.test.js): authorization denial, unconfigured model rejection, routing, timeout, and invalid configuration.
+- Dependency-free Node.js package with Node 20/22 CI.
 
-## Responsibility boundary
+## Limitations
 
-AI model boundary; does not own UI, user billing, or agent planning.
-
-## Dependencies
-
-aether-ai-providers, aether-ai-security, aether-ai-observability; optional AI DIAL integration behind an adapter.
-
-## Project rules
-
-- No implementation starts until the documentation and cross-repository contracts are reviewed.
-- Do not commit secrets, API keys, user data, or production credentials.
-- Public interfaces, security decisions, and non-obvious implementation choices must be documented.
+- This package does not authenticate principals; the caller must supply a principal from a trusted auth boundary.
+- No provider-specific adapters, retries, fallback, quota enforcement, streaming protocol, or observability exporter are implemented yet.
+- Route configuration is in-memory and must come from reviewed server-side configuration.
+- Do not expose this boundary publicly until authentication, policy source, provider credentials, request limits, and integration tests are wired and reviewed.
 
 ## Documentation
 
+- [Repository specification](docs/REPOSITORY_SPECIFICATION.md)
 - [Project specification](docs/PROJECT_SPEC.md)
-- [Architecture and connections](docs/ARCHITECTURE.md)
+- [Architecture](docs/ARCHITECTURE.md)
 - [Dependencies and contracts](docs/DEPENDENCIES_AND_CONTRACTS.md)
-- [Implementation plan and acceptance criteria](docs/IMPLEMENTATION_PLAN.md)
-- [Research and license notes](docs/RESEARCH_AND_LICENSES.md)
-- [Repository-specific technical design and test plan](docs/TECHNICAL_DESIGN.md)
-- [Repository-specific security review checklist](docs/SECURITY_REVIEW.md)
-- [Engineering and commenting standard](docs/ENGINEERING_STANDARD.md)
-- [Work log and decisions](docs/WORKLOG.md)
-- [Master 33-repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
-- [Continuity handoff for new chats](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/WORK_HANDOFF.md)
-
-## Before coding
-
-Read the project specification, architecture, contracts, implementation plan, and work log. Update the docs in the same change whenever behavior, an API contract, a dependency, or a security boundary changes.
+- [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
+- [Security review](docs/SECURITY_REVIEW.md)
+- [Master catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)

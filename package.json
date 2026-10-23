@@ -1,0 +1,10 @@
+{
+  "name": "@aether-ai/gateway",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Provider-neutral model routing and request lifecycle boundary.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "exports": { ".": "./src/index.js" },
+  "scripts": { "test": "node --test", "check": "node --check src/index.js && node --check test/gateway.test.js" }
+}
