@@ -1,6 +1,6 @@
 # aether-ai-gateway
 
-> **Status: Documentation phase.** No application code or production deployment has been started in this repository.
+> **Status: Initial request-validation utility in review.** No provider routing, model execution, authorization, or production deployment is implemented.
 
 ## Purpose
 
@@ -33,6 +33,10 @@ aether-ai-providers, aether-ai-security, aether-ai-observability; optional AI DI
 - [Work log and decisions](docs/WORKLOG.md)
 - [Master 33-repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
 - [Continuity handoff for new chats](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/WORK_HANDOFF.md)
+
+## Initial implementation
+
+The draft `@aether-ai/gateway` package validates a bounded version-1 chat request, rejects unknown fields, checks message/token/temperature limits, and returns a frozen normalized copy. It does not authorize a user/tenant, check model entitlements, apply quotas, call providers, or implement streaming. The request schema is provisional pending approval with the API and Providers repositories.
 
 ## Before coding
 
