@@ -47,17 +47,21 @@ export function createGateway({ registry, modelRoutes, authorize, timeoutMs = 30
       }
       if (!authorized) throw new GatewayError("forbidden", "Model request is not authorized");
 
+      if (signal?.aborted) throw new GatewayError("aborted", "Model request was cancelled");
       const controller = new AbortController();
       const onAbort = () => controller.abort(signal?.reason);
-      if (signal?.aborted) onAbort();
-      else signal?.addEventListener("abort", onAbort, { once: true });
+      signal?.addEventListener("abort", onAbort, { once: true });
 
       let timeoutId;
+      let timedOut = false;
       try {
         const timeout = new Promise((_, reject) => {
+          controller.signal.addEventListener("abort", () => {
+            reject(new GatewayError(timedOut ? "timeout" : "aborted", timedOut ? "Model request timed out" : "Model request was cancelled"));
+          }, { once: true });
           timeoutId = setTimeout(() => {
+            timedOut = true;
             controller.abort(new Error("Gateway request timed out"));
-            reject(new GatewayError("timeout", "Model request timed out"));
           }, timeoutMs);
         });
         const operation = Promise.resolve().then(() => registry.complete(providerId, request, { signal: controller.signal }));
