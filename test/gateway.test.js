@@ -53,3 +53,19 @@ test("validates gateway configuration", () => {
   assert.throws(() => createGateway({ registry: {}, modelRoutes: { "model-a": "p" }, authorize: () => true }), TypeError);
   assert.throws(() => createGateway({ registry: { complete() {} }, modelRoutes: { "model-a": "p" } }), TypeError);
 });
+
+
+test("rejects pre-aborted signals and promptly races caller cancellation", async () => {
+  const { gateway, calls } = makeGateway();
+  const already = new AbortController();
+  already.abort();
+  await assert.rejects(gateway.complete({ principal, request, signal: already.signal }), (e) => e.code === "aborted");
+  assert.equal(calls.length, 0);
+
+  const registry = { complete: () => new Promise(() => {}) };
+  const hanging = createGateway({ registry, modelRoutes: { "model-a": "provider-a" }, authorize: async () => true, timeoutMs: 500 });
+  const controller = new AbortController();
+  const pending = hanging.complete({ principal, request, signal: controller.signal });
+  controller.abort();
+  await assert.rejects(pending, (e) => e.code === "aborted");
+});
