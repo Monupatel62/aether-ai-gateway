@@ -21,9 +21,31 @@ test("selects only enabled providers with required model and streaming capabilit
   assert.equal(selectProvider([], request).reason, "NO_CAPABLE_PROVIDER");
 });
 
+test("rejects malformed capability metadata and does not sort on NaN priorities", () => {
+  const caps = [
+    { providerId: "provider-bad", enabled: true, models: ["vendor/model-v1"], supportsStreaming: true, priority: NaN },
+    { providerId: "provider-bad2", enabled: true, models: ["vendor/model-v1"], supportsStreaming: true, priority: -1 },
+    { providerId: "provider-bad3", enabled: true, models: ["vendor/model-v1", 4], supportsStreaming: true, priority: 0 },
+    { providerId: "provider-good", enabled: true, models: ["vendor/model-v1"], supportsStreaming: true, priority: 2 },
+  ];
+  assert.deepEqual(selectProvider(caps, request), { selected: true, providerId: "provider-good" });
+  assert.throws(() => selectProvider(caps, { ...request, model: "invalid model" }), /model is invalid/);
+  assert.throws(() => selectProvider(caps, { ...request, stream: "yes" }), /stream flag must be boolean/);
+});
+
+test("deduplicates provider IDs before selection", () => {
+  const caps = [
+    { providerId: "provider-a", enabled: true, models: ["vendor/model-v1"], supportsStreaming: true, priority: 0 },
+    { providerId: "provider-a", enabled: true, models: ["vendor/model-v1"], supportsStreaming: true, priority: 0 },
+    { providerId: "provider-b", enabled: true, models: ["vendor/model-v1"], supportsStreaming: true, priority: 1 },
+  ];
+  assert.deepEqual(selectProvider(caps, request), { selected: true, providerId: "provider-a" });
+});
+
 test("classifies provider failures without exposing raw provider errors", () => {
   assert.deepEqual(classifyProviderFailure({ kind: "timeout", message: "secret payload", retryAfterMs: 200 }), { code: "PROVIDER_TIMEOUT", retryable: true, retryAfterMs: 200 });
   assert.equal(classifyProviderFailure({ kind: "authentication" }).retryable, false);
+  assert.equal(classifyProviderFailure(null).code, "PROVIDER_FAILURE");
 });
 
 test("publishes provider secret, prompt, timeout, output, and cancellation guardrails", () => {
